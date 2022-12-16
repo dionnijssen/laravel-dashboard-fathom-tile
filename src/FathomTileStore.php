@@ -1,10 +1,10 @@
 <?php
 
-namespace Vendor\MyTile;
+namespace Creacoon\FathomTile;
 
 use Spatie\Dashboard\Models\Tile;
 
-class MyStore
+class FathomTileStore
 {
     private Tile $tile;
 
@@ -15,18 +15,18 @@ class MyStore
 
     public function __construct()
     {
-        $this->tile = Tile::firstOrCreateForName("myTileName");
+        $this->tile = Tile::firstOrCreateForName("fathomData");
     }
 
     public function setData(array $data): self
     {
-        $this->tile->putData('key', $data);
+        $this->tile->putData('fathomData', $data);
 
         return $this;
     }
 
     public function getData(): array
     {
-        return$this->tile->getData('key') ?? [];
+        return$this->tile->getData('fathomData') ?? [];
     }
 }
