@@ -9,35 +9,29 @@ class FetchDataFromFathomCommand extends Command
 {
     protected $signature = 'dashboard:fetch-data-from-fathom-api';
 
-    protected $description = 'Fetch data for fahtom tile';
+    protected $description = 'Fetch data for fathom tile';
 
     public function handle()
     {
         $fathomClient = new Fathom(config('dashboard.tiles.fathom.api_token'));
-
-        $sites = $this->getSites($fathomClient);
-
         $siteData = collect();
-//        $lastPage = $response->meta->last_page;
+
+        do {
+            $siteCollection = $fathomClient->sites()->get(100, isset($siteId));
+
+            foreach ($siteCollection as $site) {
+                $currentVisitors = $fathomClient->sites()->getCurrentVisitors($site->id);
+
+                $siteData->push([
+                    'name' => $site->name,
+                    'current_visitors' => $currentVisitors->total,
+                ]);
+            }
+
+        } while ($siteCollection->last()?->id ?? false);
 
 
-        foreach ($sites as $site) {
-            $respone = json_decode($fathomClient->reports()->get($site['data']['site_id']));
-
-            // TODO: Collect correct data
-            $siteData->push([
-                'site_url' => '',
-                'current_visitors' => '',
-            ]);
-        }
-
+        FathomTileStore::make()->setData($siteData->toArray());
         $this->info('All done!');
-    }
-
-    private function getSites(Fathom $client)
-    {
-        $response = json_decode($client->sites()->get(100, true));
-
-        return $response;
     }
 }

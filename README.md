@@ -1,40 +1,66 @@
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/support-ukraine.svg?t=1" />](https://supportukrainenow.org)
-
 # A short description of the tile
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/:vendor/:package_name.svg?style=flat-square)](https://packagist.org/packages/:vendor/:package_name)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/:vendor/:package_name/run-tests?label=tests)](https://github.com/:vendor/:package_name/actions?query=workflow%3Arun-tests+branch%3Amaster)
-[![Total Downloads](https://img.shields.io/packagist/dt/:vendor/:package_name.svg?style=flat-square)](https://packagist.org/packages/:vendor/:package_name)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/creacoon/laravel-dashboard-fathom-tile.svg?style=flat-square)](https://packagist.org/packages/creacoon/laravel-dashboard-fathom-tile)
+[![GitHub Build Action Status](https://img.shields.io/github/workflow/status/creacoon/laravel-dashboard-fathom-tile/PHP%20Composer/master)](https://github.com/creacoon/laravel-dashboard-fathom-tile/actions?query=workflow%3Aphp+branch%3Amaster)
+[![Total Downloads](https://img.shields.io/packagist/dt/creacoon/laravel-dashboard-fathom-tile.svg?style=flat-square)](https://packagist.org/packages/creacoon/laravel-dashboard-fathom-tile)
 
-A friendly explanation of what your tile does.
+This tile displays the visitors on a site using Fathom.
 
 This tile can be used on [the Laravel Dashboard](https://docs.spatie.be/laravel-dashboard).
 
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/laravel-dashboard-skeleton-tile.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/laravel-dashboard-skeleton-tile)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
-
 ## Installation
 
-You can install the package via composer:
+1. Require the package via composer
+1. Place all the necessary information in the config file, use the template below.
+1. Place the tile component in your dashboard.
+1. Schedule the command in the kernel.php.
 
+### Composer
+You can install the package via composer:
 ```bash
-composer require :vendor/:package_name
+composer require creacoon/laravel-dashboard-fathom-tile 
 ```
 
-## Usage
+### Config file
+In the `dashboard` config file, you must add this configuration in the `tiles` key. 
 
-In your dashboard view you use the `livewire:my-tile` component.
+```php
+// in config/dashboard.php
 
+return [
+    // ...
+    'tiles' => [
+        'fathom' => [
+            'token' => env('HELPSPACE_API_TOKEN'),
+            'refresh_interval_in_seconds' => '60',
+        ],
+    ],
+];
+```
+### Tile component
+In your dashboard view you use the `livewire:fathom-tile` component.
 ```html
 <x-dashboard>
-    <livewire:my-tile position="e7:e16" />
+    <livewire:fathom-tile position="e7:e16"/>
 </x-dashboard>
+```
+
+### Schedule command
+In `app\Console\Kernel.php` you should schedule the following commands.
+
+```php
+protected function schedule(Schedule $schedule)
+{
+    // ...
+           $schedule->command(FetchDataFromFathomCommand::class)->everyMinute();
+}
+```
+
+### Customizing the view
+If you want to customize the view used to render this tile, run this command:
+
+```php
+php artisan vendor:publish --tag="dashboard-fathom-tile-views"
 ```
 
 ## Testing
@@ -49,14 +75,15 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 
 ## Contributing
 
-Please see [CONTRIBUTING](https://github.com/spatie/.github/blob/main/CONTRIBUTING.md) for details.
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Security
 
-If you discover any security related issues, please email :author_email instead of using the issue tracker.
+If you discover any security related issues, please email support@creacoon.nl instead of using the issue tracker.
 
 ## Credits
 
+- [Dion Nijssen](https://github.com/dionnijssen)
 - [All Contributors](../../contributors)
 
 ## License
