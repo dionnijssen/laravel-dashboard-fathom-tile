@@ -16,10 +16,18 @@
             "role": "Developer"
         }
     ],
+
+    "repositories": [
+        {
+            "type": "vcs",
+            "url":  "git@github.com:phuclh/fathom-api.git"
+        }
+    ],
+
     "require": {
         "php": "^8.0|^7.4",
         "spatie/laravel-dashboard": "^2.0",
-        "based/fathom": "^0.1.2"
+        "based/fathom": "dev-main"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.3",
