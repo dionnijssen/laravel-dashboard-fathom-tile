@@ -15,9 +15,11 @@ class FetchDataFromFathomCommand extends Command
     {
         $fathomClient = new Fathom(config('dashboard.tiles.fathom.api_token'));
         $siteData = collect();
+        $limit = 100;
 
         do {
-            $siteCollection = $fathomClient->sites()->get(100, isset($siteId));
+            $siteCollection = $fathomClient->sites()->get($limit, isset($siteId));
+            $count = 0;
 
             foreach ($siteCollection as $site) {
                 $currentVisitors = $fathomClient->sites()->getCurrentVisitors($site->id);
@@ -26,9 +28,10 @@ class FetchDataFromFathomCommand extends Command
                     'name' => $site->name,
                     'current_visitors' => $currentVisitors->total,
                 ]);
-            }
 
-        } while ($siteCollection->last()?->id ?? false);
+                $count++;
+            }
+        } while ($count === $limit);
 
 
         FathomTileStore::make()->setData($siteData->toArray());

@@ -31,7 +31,7 @@ return [
     // ...
     'tiles' => [
         'fathom' => [
-            'token' => env('HELPSPACE_API_TOKEN'),
+            'api_token' => env('HELPSPACE_API_TOKEN'),
             'refresh_interval_in_seconds' => '60',
         ],
     ],
